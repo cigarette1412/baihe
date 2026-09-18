@@ -1,0 +1,39 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { domainList } from '../../data/domains.js';
+import { getCollection } from 'astro:content';
+
+export function getStaticPaths() {
+  return domainList.map((d) => ({ params: { domain: d.slug }, props: { domain: d } }));
+}
+
+const { domain } = Astro.props;
+const articles = (await getCollection('articles'))
+  .filter((a) => a.data.domain === domain.slug)
+  .sort((a, b) => b.data.pubDate - a.data.pubDate);
+---
+
+<BaseLayout title={`${domain.name} · 白盒`} description={domain.desc}>
+  <div class="wrap">
+    <section class="hero" style="padding-bottom:1.5rem">
+      <div class="tagline" style="font-size:.75rem;letter-spacing:.12em;text-transform:uppercase">
+        {domain.en}
+      </div>
+      <h1 style="margin-top:.6rem">{domain.name}</h1>
+      <p class="lede">{domain.desc}</p>
+    </section>
+
+    {articles.length > 0 ? (
+      <ul class="article-list">
+        {articles.map((a) => (
+          <li>
+            <a class="title" href={`/articles/${a.id}`}>{a.data.title}</a>
+            <div class="sub">{a.data.topic} · L{a.data.level} · {a.data.summary.slice(0, 40)}…</div>
+          </li>
+        ))}
+      </ul>
+    ) : (
+      <p style="color:#8a8a83">这个领域还没有文章。下一篇就写它。</p>
+    )}
+  </div>
+</BaseLayout>

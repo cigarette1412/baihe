@@ -1,0 +1,55 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { domainList } from '../data/domains.js';
+import { getCollection } from 'astro:content';
+
+const articles = (await getCollection('articles')).sort(
+  (a, b) => b.data.pubDate - a.data.pubDate
+);
+---
+
+<BaseLayout
+  title="白盒 · 把每个原理拆到不能再拆"
+  description="一个开源的科学原理拆解站：百科给结论，我们给推导路径。"
+>
+  <div class="wrap">
+    <section class="hero">
+      <h1>把每个原理，拆到不能再拆。</h1>
+      <p class="lede">
+        百科告诉你结论是什么，教材给你一个公式，短视频给你三秒钟的震撼。
+        这里只做一件事：<strong>把这个原理为什么必须如此，一步一步讲清楚</strong>——
+        直到你再也问不出「为什么」。
+      </p>
+      <div class="meta">
+        {articles.length} 篇 · 内容 CC BY-SA 4.0 · 代码 MIT · 完全开源
+      </div>
+    </section>
+
+    <div class="section-title">五个入口</div>
+    <div class="domain-grid">
+      {domainList.map((d) => (
+        <a class="domain-card" href={`/domains/${d.slug}`}>
+          <div class="en">{d.en}</div>
+          <h3>{d.name}</h3>
+          <p>{d.desc}</p>
+        </a>
+      ))}
+    </div>
+
+    {articles.length > 0 && (
+      <>
+        <div class="section-title">全部文章</div>
+        <ul class="article-list">
+          {articles.map((a) => (
+            <li>
+              <a class="title" href={`/articles/${a.id}`}>{a.data.title}</a>
+              <div class="sub">
+                {domainList.find((d) => d.slug === a.data.domain)?.name} · {a.data.topic} · L{a.data.level}
+              </div>
+            </li>
+          ))}
+        </ul>
+      </>
+    )}
+  </div>
+</BaseLayout>

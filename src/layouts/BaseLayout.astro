@@ -1,0 +1,42 @@
+---
+import 'katex/dist/katex.min.css';
+import '../styles/global.css';
+import { domainList } from '../data/domains.js';
+
+const { title, description } = Astro.props;
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%232b5c4e'/><rect x='9' y='9' width='14' height='14' rx='2' fill='none' stroke='white' stroke-width='2.5'/></svg>" />
+  </head>
+  <body>
+    <header class="site-head">
+      <div class="wrap-wide inner">
+        <a class="brand" href="/">白盒<span class="dot">.</span>org</a>
+        <span class="tagline">把每个原理拆到不能再拆</span>
+        <nav style="margin-left:auto; display:flex; gap:.9rem; font-size:.84rem;">
+          {domainList.map((d) => <a href={`/domains/${d.slug}`} style="color:#4a4a46">{d.name}</a>)}
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <slot />
+    </main>
+
+    <footer class="site-foot">
+      <div class="wrap-wide">
+        <div>白盒 · baihe.org —— 本站内容采用 CC BY-SA 4.0 许可，代码采用 MIT 许可。</div>
+        <div style="margin-top:.35rem">
+          看到一个错字、一段没讲清楚的话？<a href="https://github.com/">在 GitHub 上提一个 PR</a>。
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,74 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import { domains, levelLabel } from '../data/domains.js';
+
+const { title, summary, domain, topic, level, pubDate, headings } = Astro.props;
+const d = domains[domain];
+const toc = (headings || []).filter((h) => h.depth === 2);
+const dateStr = new Date(pubDate).toLocaleDateString('zh-CN', {
+  year: 'numeric', month: 'long', day: 'numeric',
+});
+---
+
+<BaseLayout title={`${title} · 白盒`} description={summary}>
+  <article class="wrap-wide">
+    <div class="with-toc">
+      <div>
+        <header class="article-head">
+          <div class="crumb">
+            <a href="/">首页</a> › <a href={`/domains/${domain}`}>{d.name}</a> › {topic}
+          </div>
+          <h1>{title}</h1>
+          <div class="badges">
+            <span class="badge level">{levelLabel[level]}</span>
+            <span class="badge">{topic}</span>
+            <span class="badge">{dateStr}</span>
+          </div>
+          <p class="summary">{summary}</p>
+        </header>
+
+        {toc.length > 0 && (
+          <div class="toc-mobile">
+            <details>
+              <summary>目录</summary>
+              <ol>
+                {toc.map((h) => <li><a href={`#${h.slug}`}>{h.text}</a></li>)}
+              </ol>
+            </details>
+          </div>
+        )}
+
+        <div class="prose">
+          <slot />
+        </div>
+      </div>
+
+      {toc.length > 0 && (
+        <nav class="toc" aria-label="目录">
+          <div class="toc-title">目录</div>
+          <ol>
+            {toc.map((h) => <li><a href={`#${h.slug}`}>{h.text}</a></li>)}
+          </ol>
+        </nav>
+      )}
+    </div>
+  </article>
+
+  <script>
+    const links = Array.from(document.querySelectorAll('.toc a'));
+    const targets = Array.from(document.querySelectorAll('.prose h2'));
+    if (links.length && targets.length) {
+      const io = new IntersectionObserver(
+        (entries) => {
+          for (const e of entries) {
+            if (e.isIntersecting) {
+              for (const l of links) l.classList.toggle('active', l.hash === '#' + e.target.id);
+            }
+          }
+        },
+        { rootMargin: '-8% 0px -78% 0px' }
+      );
+      for (const t of targets) io.observe(t);
+    }
+  </script>
+</BaseLayout>
