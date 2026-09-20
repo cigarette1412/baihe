@@ -16,19 +16,49 @@
 
 ## 二、推荐方案：Cloudflare Pages
 
-理由：国内访问稳定、免费额度足够、自动 HTTPS、绑定自有域名简单。
+理由：国内访问稳定、免费额度足够、自动 HTTPS、绑定自有域名简单。仓库已推送，可以直接连。
 
-1. 把仓库推到 GitHub；
-2. Cloudflare Dashboard → Workers & Pages → Create → Pages → Connect to Git；
-3. 构建配置：
-   - Framework preset：`Astro`
-   - Build command：`npm run build`
-   - Build output directory：`dist`
-   - Node version：`22`
-4. 部署完成后绑定域名 `baihe.org`：
-   - Custom domains → 添加 `baihe.org` 与 `www.baihe.org`
-   - 按提示把域名的 NS 记录指向 Cloudflare（若域名原本不在 Cloudflare 托管）
-5. 打开 `https://baihe.org/sitemap.xml` 确认能访问。
+### A. 创建项目（约 2 分钟）
+
+1. 打开 https://dash.cloudflare.com/ 并登录（没有账号就注册，免费）；
+2. 左侧 **Workers & Pages** → **Create** → **Pages** 标签 → **Connect to Git**；
+3. 选 **GitHub** → 授权 → 仓库选 `cigarette1412/baihe`
+   （如果列表里看不到，点 *Configure GitHub access* 只勾选这一个仓库）；
+4. **Begin setup**。
+
+### B. 构建配置（填错这里会构建失败）
+
+| 字段 | 填什么 |
+|---|---|
+| Project name | `baihe`（决定二级域名 `baihe.pages.dev`） |
+| Production branch | `main` |
+| Framework preset | `Astro` |
+| Build command | `npm run build` |
+| Build output directory | `dist` |
+| Root directory | `/`（留空） |
+
+展开 **Environment variables (advanced)**，加一条（防止默认 Node 过低）：
+
+| Variable | Value |
+|---|---|
+| `NODE_VERSION` | `22` |
+
+> 仓库里已放 `.nvmrc`（内容 `22`），双保险。Astro 5 要求 Node ≥ 18.20.8，
+> Cloudflare 的默认版本偶尔会落到旧版，显式指定最省事。
+
+点 **Save and Deploy**。首次构建约 1–2 分钟，成功后会给你 `https://baihe.pages.dev`。
+
+### C. 绑定 baihe.org
+
+先用 `pages.dev` 看一遍效果，确认没问题再绑域名（绑了之后 canonical 才完全对得上）。
+
+1. 进项目 → **Custom domains** → **Set up a custom domain** → 填 `baihe.org`；
+2. Cloudflare 会检测域名的 NS：
+   - **已在 Cloudflare 托管** → 直接自动加 DNS 记录，等几分钟即可；
+   - **不在**（在阿里云/腾讯云等）→ 它会给你两个 NS 地址，去你的域名商后台把
+     **Nameserver 改成这两个**。生效要等 几小时（通常 1–2 小时，最长 48 小时）；
+3. 再设一次 `www.baihe.org`，让 Cloudflare 自动 301 到主域名；
+4. SSL/TLS 保持默认 **Full**，Cloudflare 会自动签证书（也是要等生效）。
 
 **不要用 Vercel**：国内访问不稳定。
 
@@ -44,21 +74,25 @@
 ## 四、上线后立刻做的检查
 
 ```
-☐ 首页、5 个领域页、4 篇文章页全部 200
-☐ 交互演示能正常拨动（哈希的雪崩、淋浴水温、拥塞窗口、傅里叶本轮）
+☐ 首页、5 个领域页、5 篇文章页全部 200
+☐ 交互演示能正常拨动（哈希的雪崩、淋浴水温、拥塞窗口、傅里叶本轮、生日曲线）
 ☐ KaTeX 公式正常渲染（不是显示成源码）
 ☐ 手机上看一遍：目录折叠、公式不溢出、演示可操作
 ☐ https://baihe.org/sitemap.xml 可访问
+☐ 访问一个不存在的地址，确认出现 404 页而不是 Cloudflare 默认报错
 ☐ 用手机浏览器打开一篇文章，复制链接发到微信，看分享卡片是否正常
 ☐ Google Search Console 提交 sitemap
 ```
 
+> **以后怎么更新站点**：改完内容 → `git push` 到 main → Cloudflare 自动重新构建，
+> 约 1–2 分钟后线上生效。不需要手动上传任何东西。
+
 ## 五、当前站点状态（用于验收对照）
 
-- 页面：10 个 HTML（首页 + 5 领域页 + 4 文章页）
-- 文章：哈希（计算）、反馈（横切原理）、拥塞控制（计算）、傅里叶（物理）
-- 交互组件：5 个
-- 待补：数学、哲学两个领域还没有文章
+- 页面：12 个 HTML（首页 + 5 领域页 + 5 文章页 + 404）
+- 文章：哈希（计算）、反馈（横切原理）、拥塞控制（计算）、傅里叶（物理）、生日悖论（数学）
+- 交互组件：6 个
+- 待补：哲学领域还没有文章
 
 ## 六、已知待办
 
