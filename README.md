@@ -39,9 +39,24 @@
 
 ```bash
 npm install
-npm run dev      # http://localhost:4321
-npm run build    # 输出到 dist/
+npm run dev            # 开发模式，热更新
+npm run build          # 构建静态产物到 dist/
+npm run preview:local  # 零依赖静态服务器，预览 dist/ 的真实产物
 ```
+
+三种方式都在 http://localhost:4321
+
+Windows 用户也可以直接双击 `preview.bat`（首次会自动构建）。
+
+> **验收效果请用 `preview:local` 而不是 `dev`。**
+> dev 模式带热更新与未压缩资源；`preview:local` 看到的就是部署之后的真实产物 ——
+> 压缩过的资源、真实的加载顺序、没有 dev 工具的干扰。
+
+## 部署上线
+
+产物是纯静态文件，任何静态托管都能跑。完整步骤见 [DEPLOY.md](./DEPLOY.md)。
+
+部署前请确认 `astro.config.mjs` 里的 `site` 是你的真实地址。
 
 ## 写一篇新文章
 

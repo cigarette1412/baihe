@@ -3,7 +3,9 @@ import 'katex/dist/katex.min.css';
 import '../styles/global.css';
 import { domainList } from '../data/domains.js';
 
-const { title, description } = Astro.props;
+const { title, description, ogType = 'website' } = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+const ogImage = new URL('/favicon.svg', Astro.site).href;
 ---
 
 <!doctype html>
@@ -13,7 +15,18 @@ const { title, description } = Astro.props;
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%232b5c4e'/><rect x='9' y='9' width='14' height='14' rx='2' fill='none' stroke='white' stroke-width='2.5'/></svg>" />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="theme-color" content="#2b5c4e" />
+
+    <meta property="og:type" content={ogType} />
+    <meta property="og:site_name" content="白盒" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:locale" content="zh_CN" />
+    <meta name="twitter:card" content="summary" />
   </head>
   <body>
     <header class="site-head">

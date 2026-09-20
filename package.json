@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
-    "preview": "astro preview"
+    "preview": "astro preview",
+    "preview:local": "node tools/serve.mjs dist"
   },
   "dependencies": {
     "@astrojs/mdx": "^4.3.0",
