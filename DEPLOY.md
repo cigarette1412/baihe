@@ -20,11 +20,21 @@
 
 ### A. 创建项目（约 2 分钟）
 
-1. 打开 https://dash.cloudflare.com/ 并登录（没有账号就注册，免费）；
-2. 左侧 **Workers & Pages** → **Create** → **Pages** 标签 → **Connect to Git**；
-3. 选 **GitHub** → 授权 → 仓库选 `cigarette1412/baihe`
-   （如果列表里看不到，点 *Configure GitHub access* 只勾选这一个仓库）；
-4. **Begin setup**。
+> **新版 Cloudflare 界面容易走错**：左侧列表页顶部的 **Create application** 蓝色按钮默认进入 **Workers** 创建流程（表单里有 `Deploy command: npx wrangler deploy`、没有 `Build output directory`）。**Pages 不要从那走**。
+
+**最快路径**：直接打开（把 `<account_id>` 换成你账号的 ID，通常在控制台 URL 里能看到，例如 `98b08986508be0f11503ae8af135d6f3`）：
+
+```
+https://dash.cloudflare.com/<account_id>/pages/new
+```
+
+然后：
+
+1. **Connect to Git** → 选 **GitHub** → 授权；
+2. 仓库选 `cigarette1412/baihe`（看不到就点 *Configure GitHub access* 只勾选这个仓库）；
+3. **Begin setup**。
+
+**如果你已经误建了 Workers 项目**：点进那个项目 → **Settings** → 拉到最下 **Delete project**，删掉再回到 Pages 创建流程。误建的 Workers 项目不会自动释放 `baihe.pages.dev`，所以 Pages 项目名可能会被自动加上 `-xxx` 后缀（例如 `baihe-6bt.pages.dev`），不影响使用。
 
 ### B. 构建配置（填错这里会构建失败）
 
@@ -46,7 +56,7 @@
 > 仓库里已放 `.nvmrc`（内容 `22`），双保险。Astro 5 要求 Node ≥ 18.20.8，
 > Cloudflare 的默认版本偶尔会落到旧版，显式指定最省事。
 
-点 **Save and Deploy**。首次构建约 1–2 分钟，成功后会给你 `https://baihe.pages.dev`。
+点 **Save and Deploy**。首次构建约 1–2 分钟。成功后会出现 `https://baihe.pages.dev`；如果项目名被占用，Cloudflare 会自动加后缀（例如 `https://baihe-6bt.pages.dev`），不影响使用。
 
 ### C. 绑定 baihe.org
 
