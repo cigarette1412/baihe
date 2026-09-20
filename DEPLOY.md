@@ -7,8 +7,12 @@
 | # | 事项 | 状态 |
 |---|---|---|
 | 1 | 站名确认为「白盒」（全站、README、commit 信息均已用此名） | ☑ 已确认 2026-09-20 |
-| 2 | GitHub 仓库已建好，本地已 `git remote add` 并 push | ☐ 暂缓，用户决定后续再传 |
+| 2 | GitHub 仓库已建好并推送 | ☑ 已推送 https://github.com/cigarette1412/baihe |
 | 3 | `astro.config.mjs` 的 `site` 已改为最终线上地址 | ☑ 已填 https://baihe.org |
+
+> 本机到 GitHub 的 443 端口不通（代理对 github.com 返回 502，直连超时），
+> **只有 22 端口（SSH）可用**。所以 remote 配的是 `git@github.com:cigarette1412/baihe.git`，
+> 后续提交一律走 SSH，不要切回 HTTPS。
 
 ## 二、推荐方案：Cloudflare Pages
 
@@ -59,8 +63,7 @@
 ## 六、已知待办
 
 - ☑ ~~站名确认~~（已确认为「白盒」）
-- ☐ GitHub 远端地址（暂缓，本地已 4 次提交，无 remote）
-- ☐ 页脚「在 GitHub 上提一个 PR」目前指向 `https://github.com/`，是占位符 ——
-     拿到仓库地址后需替换成真实 PR 链接，否则点了会跳到 GitHub 首页
+- ☑ ~~GitHub 远端地址~~（已推送，走 SSH）
+- ☑ ~~页脚 PR 链接~~（已指向真实仓库，并加了 issue 入口）
 - ☐ 哲学领域首篇（五个入口里唯一还空的）
 - ☐ 五个领域的主题页（目前只有领域页，主题层尚未展开）
